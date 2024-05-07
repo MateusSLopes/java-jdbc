@@ -3,6 +3,8 @@ package mateus.jdbc.service;
 import mateus.jdbc.domain.Producer;
 import mateus.jdbc.repository.ProducerRepository;
 
+import java.util.List;
+
 public class ProducerService {
     public static void save(Producer producer) {
         ProducerRepository.save(producer);
@@ -16,6 +18,14 @@ public class ProducerService {
     public static void update(Producer producer) {
         requireValidId(producer.getId());
         ProducerRepository.update(producer);
+    }
+
+    public static List<Producer> findAll() {
+        return ProducerRepository.findAll();
+    }
+
+    public static List<Producer> findByName(String name) {
+        return ProducerRepository.findByName(name);
     }
 
     public static void requireValidId(Integer id) {
