@@ -16,5 +16,7 @@ public class ConnectionFactoryTest {
 
         List<Producer> producers = ProducerService.findAll();
         log.info("Producers found '{}'", producers);
+
+        ProducerService.showProducerMetaData();
     }
 }

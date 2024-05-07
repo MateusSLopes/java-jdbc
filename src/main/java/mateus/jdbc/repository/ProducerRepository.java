@@ -4,10 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import mateus.jdbc.conn.ConnectionFactory;
 import mateus.jdbc.domain.Producer;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,5 +62,24 @@ public class ProducerRepository {
             log.error("Error while trying to find producer");
         }
         return producers;
+    }
+
+    public static void showProducerMetaData() {
+        String sql = "SELECT * FROM anime_store.producer;";
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            ResultSetMetaData rsMetaData = rs.getMetaData();
+            int columnMetaData = rsMetaData.getColumnCount();
+            for (int i = 1; i <= columnMetaData; i++) {
+                log.info("------------------------"); // To indicate where the column metadata starts
+                log.info("Table name: {}", rsMetaData.getTableName(i));
+                log.info("Column name: {}", rsMetaData.getColumnName(i));
+                log.info("Column type: {}", rsMetaData.getColumnTypeName(i));
+                log.info("Column size: {}", rsMetaData.getColumnDisplaySize(i));
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to show producer metadata");
+        }
     }
 }
