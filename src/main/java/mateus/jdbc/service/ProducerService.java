@@ -1,10 +1,12 @@
 package mateus.jdbc.service;
 
+import lombok.extern.log4j.Log4j2;
 import mateus.jdbc.domain.Producer;
 import mateus.jdbc.repository.ProducerRepository;
 
 import java.util.List;
 
+@Log4j2
 public class ProducerService {
     public static void save(Producer producer) {
         ProducerRepository.save(producer);
@@ -26,6 +28,21 @@ public class ProducerService {
 
     public static List<Producer> findByName(String name) {
         return ProducerRepository.findByName(name);
+    }
+
+    public static List<Producer> findByNameAndUpdateToUpperCase(String name) {
+        return ProducerRepository.findByNameAndUpdateToUpperCase(name);
+    }
+
+    public static Producer findByNameAndInsertWhenNotFound(String name) {
+        Producer producer = ProducerRepository.findByNameAndInsertWhenNotFound(name);
+        if (producer == null)
+            log.info("The producer '{}' already exists.", name);
+        return producer;
+    }
+
+    public static void findByNameAndDelete(String name) {
+        ProducerRepository.findByNameAndDelete(name);
     }
 
     public static void showProducerMetaData() {
