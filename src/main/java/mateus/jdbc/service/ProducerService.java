@@ -30,6 +30,10 @@ public class ProducerService {
         return ProducerRepository.findByName(name);
     }
 
+    public static List<Producer> findByNamePreparedStatement(String name) {
+        return ProducerRepository.findByNamePreparedStatement(name);
+    }
+
     public static List<Producer> findByNameAndUpdateToUpperCase(String name) {
         return ProducerRepository.findByNameAndUpdateToUpperCase(name);
     }

@@ -11,6 +11,6 @@ public class ConnectionFactoryTest {
     public static void main(String[] args) {
         Producer producer = ProducerService.findByNameAndInsertWhenNotFound("MMD");
         log.info("Producer inserted '{}'", producer);
-        ProducerService.findByNameAndDelete("MMD");
+        log.info(ProducerService.findByNamePreparedStatement("NHK"));
     }
 }
