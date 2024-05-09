@@ -172,6 +172,28 @@ public class ProducerRepository {
         return ps;
     }
 
+    public static List<Producer> findByNameCallableStatement(String name) {
+        log.info("Finding by name");
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+             var cs = callableStatementFindByName(conn, name);
+             ResultSet rs = cs.executeQuery()) {
+            while (rs.next()) {
+                producers.add(getProducer(rs));
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to find producer");
+        }
+        return producers;
+    }
+
+    public static CallableStatement callableStatementFindByName(Connection conn, String name) throws SQLException {
+        String sql = "CALL `anime_store`.`sp_get_producer_by_name`(?);";
+        CallableStatement cs = conn.prepareCall(sql);
+        cs.setString(1, name);
+        return cs;
+    }
+
     public static List<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by name");
         String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE '%s';".formatted("%" + name + "%");
