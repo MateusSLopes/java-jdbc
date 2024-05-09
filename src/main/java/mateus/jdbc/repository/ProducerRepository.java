@@ -40,6 +40,23 @@ public class ProducerRepository {
         }
     }
 
+    public static void updatePreparedStatement(Producer producer) {
+        try (Connection conn = ConnectionFactory.getConnection(); var ps = preparedStatementUpdate(conn,producer)) {
+            int rowsAffected = ps.executeUpdate();
+            log.info("Updated producer in the database, id '{}', rows affected '{}'", producer.getId(), rowsAffected);
+        } catch (SQLException e) {
+            log.error("Error while trying to update producer with id: {}", producer.getId(), e);
+        }
+    }
+
+    public static PreparedStatement preparedStatementUpdate(Connection conn, Producer producer) throws SQLException{
+        String sql = "UPDATE `anime_store`.`producer` SET `name` = ? WHERE (`id` = ?);";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, producer.getName());
+        ps.setInt(2, producer.getId());
+        return ps;
+    }
+
     public static void showProducerMetaData() {
         String sql = "SELECT * FROM anime_store.producer;";
         try (Connection conn = ConnectionFactory.getConnection();
@@ -135,10 +152,9 @@ public class ProducerRepository {
 
     public static List<Producer> findByNamePreparedStatement(String name) {
         log.info("Finding by name");
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE ?;";
         List<Producer> producers = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getConnection();
-             var ps = createPreparedStatement(conn, sql, name);
+             var ps = preparedStatementFindByName(conn, name);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 producers.add(getProducer(rs));
@@ -149,7 +165,8 @@ public class ProducerRepository {
         return producers;
     }
 
-    public static PreparedStatement createPreparedStatement(Connection conn, String sql, String name) throws SQLException {
+    public static PreparedStatement preparedStatementFindByName(Connection conn, String name) throws SQLException {
+        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE ?;";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, name);
         return ps;

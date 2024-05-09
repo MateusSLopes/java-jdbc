@@ -12,5 +12,7 @@ public class ConnectionFactoryTest {
         Producer producer = ProducerService.findByNameAndInsertWhenNotFound("MMD");
         log.info("Producer inserted '{}'", producer);
         log.info(ProducerService.findByNamePreparedStatement("NHK"));
+        Producer p = Producer.builder().id(1).name("Pierrot").build();
+        ProducerService.updatePreparedStatement(p);
     }
 }
