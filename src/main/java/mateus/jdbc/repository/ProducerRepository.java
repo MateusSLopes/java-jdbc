@@ -136,7 +136,7 @@ public class ProducerRepository {
 
     public static List<Producer> findByName(String name) {
         log.info("Finding by name");
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE '%s';".formatted("%" + name + "%");
+        String sql = "SELECT * FROM anime_store.producer WHERE name LIKE '%s';".formatted("%" + name + "%");
         List<Producer> producers = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getConnection();
              Statement stmt = conn.createStatement();
@@ -166,7 +166,7 @@ public class ProducerRepository {
     }
 
     public static PreparedStatement preparedStatementFindByName(Connection conn, String name) throws SQLException {
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE ?;";
+        String sql = "SELECT * FROM anime_store.producer WHERE name LIKE ?;";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setString(1, name);
         return ps;
@@ -196,7 +196,7 @@ public class ProducerRepository {
 
     public static List<Producer> findByNameAndUpdateToUpperCase(String name) {
         log.info("Finding by name");
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE '%s';".formatted("%" + name + "%");
+        String sql = "SELECT * FROM anime_store.producer WHERE name LIKE '%s';".formatted("%" + name + "%");
         List<Producer> producers = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getConnection();
              Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -214,7 +214,7 @@ public class ProducerRepository {
 
     public static Producer findByNameAndInsertWhenNotFound(String name) {
         log.info("Finding by name");
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE '%s';".formatted("%" + name + "%");
+        String sql = "SELECT * FROM anime_store.producer WHERE name LIKE '%s';".formatted("%" + name + "%");
         Producer newProducer = null;
         try (Connection conn = ConnectionFactory.getConnection();
              Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -231,7 +231,7 @@ public class ProducerRepository {
 
     public static void findByNameAndDelete(String name) {
         log.info("Finding by name");
-        String sql = "SELECT * FROM anime_store.producer WHERE NAME LIKE '%s';".formatted("%" + name + "%");
+        String sql = "SELECT * FROM anime_store.producer WHERE name LIKE '%s';".formatted("%" + name + "%");
         try (Connection conn = ConnectionFactory.getConnection();
              Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -250,7 +250,7 @@ public class ProducerRepository {
         rs.insertRow();
     }
 
-    private static Producer getProducer(ResultSet rs) throws SQLException {
+    static Producer getProducer(ResultSet rs) throws SQLException {
         return Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build();
     }
 }
